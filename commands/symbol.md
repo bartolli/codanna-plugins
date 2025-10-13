@@ -1,5 +1,5 @@
 ---
-description: Look up a symbol and ask Claude a specific question about it
+description: Looks up a symbol by name. Returns its location, signature, line range, documentation, calls, callers, implementations, and definitions.
 argument-hint: <symbol-name> "<question>"
 ---
 
@@ -14,7 +14,7 @@ User's question: **$2**
 Use the Bash tool to fetch symbol information, then answer the user's question.
 
 **Workflow:**
-1. Execute: `node .claude/scripts/context-provider.js symbol $1`
+1. Execute: `node .claude/scripts/codanna/context-provider.js symbol $1`
 2. Analyze the symbol details returned
 3. Answer the question: "$2"
 

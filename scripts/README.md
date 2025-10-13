@@ -6,7 +6,7 @@ Node.js utilities that provide structured context from Codanna CLI to Claude Cod
 
 ```
 ┌─────────────────┐
-│ Slash Command   │ /ask, /symbol, etc.
+│ Slash Command   │ /symbol, /find, etc.
 └────────┬────────┘
          │ Invokes via Bash tool
          ▼
@@ -154,7 +154,7 @@ JSON Schema definition for Codanna symbol responses.
 allowed-tools: Bash(node:*)
 ---
 
-!`node .claude/scripts/context-provider.js symbol $1`
+!`node .claude/scripts/codanna/context-provider.js symbol $1`
 
 Based on the symbol above, ...
 ```
@@ -169,7 +169,7 @@ description: Ask a question about a symbol
 
 ## Your task
 
-1. Execute: `node .claude/scripts/context-provider.js symbol $1`
+1. Execute: `node .claude/scripts/codanna/context-provider.js symbol $1`
 2. Analyze the output
 3. Answer the question: "$2"
 ```
@@ -261,22 +261,22 @@ Each package can have its own `.codanna/.project-id`, pointing to separate index
 **Testing:**
 ```bash
 # Test symbol lookup
-node .claude/scripts/context-provider.js symbol index_file
+node .claude/scripts/codanna/context-provider.js symbol index_file
 
 # Test with formatting
-node .claude/scripts/context-provider.js symbol main --format=compact
+node .claude/scripts/codanna/context-provider.js symbol main --format=compact
 
 # Test language filtering
-node .claude/scripts/context-provider.js search "parse" --lang=rust --limit=3
+node .claude/scripts/codanna/context-provider.js search "parse" --lang=rust --limit=3
 
 # Test search
-node .claude/scripts/context-provider.js search "indexing" --limit=10
+node .claude/scripts/codanna/context-provider.js search "indexing" --limit=10
 ```
 
 **Debugging config resolution:**
 ```bash
 node -e "
-const ConfigResolver = require('./.claude/scripts/lib/config-resolver');
+const ConfigResolver = require('./.claude/scripts/codanna/lib/config-resolver');
 const resolver = new ConfigResolver();
 console.log('Project ID:', resolver.readProjectId());
 console.log('Settings:', resolver.resolveSettingsPath());
@@ -302,11 +302,11 @@ console.log('Command:', resolver.getCodannaCommand());
 
 **Separation of concerns:**
 - Codanna CLI: Index management, querying
-- Node.js scripts: JSON parsing, formatting, config discovery
+- Node.js scripts: JSON parsing, workflow piping, formatting, and config discovery.
 - Claude: Analysis, reasoning, answering questions
 
 **Benefits:**
-- Reduces Claude's token usage (pre-formatted output)
+- Reduces Claude's token usage (pre-computed & pre-formatted output)
 - Reuses Codanna's project infrastructure
 - Works seamlessly with monorepos
 - Extensible for new query types
@@ -314,7 +314,6 @@ console.log('Command:', resolver.getCodannaCommand());
 
 **Trade-offs:**
 - Requires Node.js runtime
-- Additional layer of indirection
 - Must keep schemas in sync with Codanna output
 
 ## Future Enhancements
@@ -323,5 +322,3 @@ console.log('Command:', resolver.getCodannaCommand());
 - Full JSON Schema validation with ajv
 - Caching for repeated queries
 - Batch operations (multiple symbols at once)
-- Custom output templates
-- Integration with other code intelligence tools
