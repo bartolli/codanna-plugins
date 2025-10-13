@@ -1,0 +1,35 @@
+{
+  "name": "codanna",
+  "source": "./",
+  "description": "Codanna code intelligence integration for Claude Code - semantic search, symbol analysis, and call graph exploration",
+  "author": {
+    "name": "bartolli"
+  },
+  "version": "0.1.1",
+  "repository": "https://github.com/bartolli/codanna-plugins",
+  "license": "MIT",
+  "keywords": [
+    "codanna",
+    "code-intelligence",
+    "semantic-search",
+    "symbol-analysis",
+    "call-graph",
+    "mcp"
+  ],
+  "category": "codanna-core",
+  "commands": [
+    "./commands/find.md",
+    "./commands/symbol.md"
+  ],
+  "scripts": [
+    "./scripts/formatters/semantic.js",
+    "./scripts/formatters/symbol.js",
+    "./scripts/lib/config-resolver.js",
+    "./scripts/lib/executor.js",
+    "./scripts/lib/validator.js",
+    "./scripts/schemas/semantic_search.json",
+    "./scripts/schemas/symbol.json",
+    "./scripts/context-provider.js"
+  ],
+  "strict": false
+}

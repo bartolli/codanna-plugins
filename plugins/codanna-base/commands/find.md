@@ -30,8 +30,13 @@ Use the Bash tool to perform semantic code search.
 3. **To see actual implementation** of interesting results:
    - Use the line range from the Location field to read just the relevant code
    - Example: If you see "Location: `src/io/exit_code.rs:108-120`"
-   - Execute: `sed -n '108,120p' src/io/exit_code.rs` to read lines 108-120
-   - This shows the actual code implementation, not just the signature
+   - Use the Read tool with:
+      - `file_path`: `src/io/exit_code.rs` (use the working directory from your environment context <env> to construct the absolute
+  path)
+      - `offset`: 108 (start line)
+      - `limit`: 13 (calculated as: 120 - 108 + 1)
+   - Formula: `limit = end_line - start_line + 1`
+   - Example: `Read(file_path="/full/path/to/src/io/exit_code.rs", offset=108, limit=13)`
 4. **When relationships are shown** (called_by, calls, defines, implements):
    - If a relationship looks relevant to answering the query, investigate it
    - Execute: `node .claude/scripts/codanna/context-provider.js symbol <relationship_symbol_name>`
@@ -46,6 +51,12 @@ Use the Bash tool to perform semantic code search.
 - System guidance for follow-up investigation
 
 **Tips:**
+- To see actual implementation with `sed`: (works native on Unix based environments):
+   - Use the line range from the Location field to read just the relevant code
+   - Example: If you see "Location: `src/io/exit_code.rs:108-120`"
+   - Execute: `sed -n '108,120p' src/io/exit_code.rs` to read lines 108-120
+   - This shows the actual code implementation, not just the signature. It works like the Read tool.
+
 - Add `--lang=rust` (or python, typescript, etc.) to narrow results by language
 - Follow relationships that appear in multiple results (they're likely important)
 - Use the `symbol` command to get full details about interesting relationships
