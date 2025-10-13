@@ -1,0 +1,13 @@
+{
+  "name": "codanna-plugins",
+  "owner": {
+    "name": "bartolli"
+  },
+  "plugins": [
+    {
+      "name": "codanna",
+      "source": "./",
+      "description": "Codanna code intelligence integration for Claude Code - semantic search, symbol analysis, and call graph exploration"
+    }
+  ]
+}
