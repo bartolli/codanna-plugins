@@ -21,133 +21,6 @@ class ContextProvider {
   constructor() {
     this.executor = new CodannaExecutor();
     this.validator = new SchemaValidator();
-    this.symbolLocationCache = new Map();
-  }
-
-  /**
-   * Attempt to resolve and cache the file path for a symbol using MCP lookups.
-   */
-  ensureSymbolLocation(symbol) {
-    if (!symbol) {
-      return;
-    }
-
-    if (symbol.file_path) {
-      this.cacheSymbolLocation(symbol, symbol.file_path);
-      return;
-    }
-
-    const cacheKey = this.getSymbolCacheKey(symbol);
-    if (cacheKey && this.symbolLocationCache.has(cacheKey)) {
-      symbol.file_path = this.symbolLocationCache.get(cacheKey);
-      return;
-    }
-
-    if (symbol.file_id === undefined || symbol.file_id === null || !symbol.name) {
-      return;
-    }
-
-    try {
-      const matches = this.executor.findSymbolWithFilters({
-        name: symbol.name,
-        file_id: symbol.file_id,
-        limit: 5
-      });
-
-      if (!Array.isArray(matches) || matches.length === 0) {
-        return;
-      }
-
-      const match = matches.find(entry => entry.symbol?.id === symbol.id) || matches[0];
-      if (match && match.file_path) {
-        symbol.file_path = match.file_path;
-        this.cacheSymbolLocation(symbol, match.file_path);
-      }
-    } catch (error) {
-      // Swallow lookup errors to keep formatting resilient
-    }
-  }
-
-  /**
-   * Cache symbol file path using multiple keys for reuse.
-   */
-  cacheSymbolLocation(symbol, filePath) {
-    const cacheKeys = [];
-    if (symbol.id !== undefined && symbol.id !== null) {
-      cacheKeys.push(`id:${symbol.id}`);
-    }
-    if (symbol.file_id !== undefined && symbol.file_id !== null) {
-      cacheKeys.push(`file:${symbol.file_id}`);
-    }
-    if (symbol.name && symbol.file_id !== undefined && symbol.file_id !== null) {
-      cacheKeys.push(`name:${symbol.name}|file:${symbol.file_id}`);
-    }
-
-    cacheKeys.forEach((key) => {
-      if (!this.symbolLocationCache.has(key)) {
-        this.symbolLocationCache.set(key, filePath);
-      }
-    });
-  }
-
-  /**
-   * Build a cache key for a symbol lookup.
-   */
-  getSymbolCacheKey(symbol) {
-    if (symbol.id !== undefined && symbol.id !== null) {
-      return `id:${symbol.id}`;
-    }
-    if (symbol.file_id !== undefined && symbol.file_id !== null && symbol.name) {
-      return `name:${symbol.name}|file:${symbol.file_id}`;
-    }
-    if (symbol.file_id !== undefined && symbol.file_id !== null) {
-      return `file:${symbol.file_id}`;
-    }
-    return null;
-  }
-
-  /**
-   * Enrich relationships in a response with file locations when missing.
-   */
-  enrichRelationships(response) {
-    if (!response) {
-      return;
-    }
-
-    const items = [];
-    if (response.item) {
-      items.push(response.item);
-    }
-    if (Array.isArray(response.items)) {
-      items.push(...response.items);
-    }
-
-    items.forEach((item) => {
-      if (!item || !item.relationships) {
-        return;
-      }
-
-      if (item.symbol && item.file_path) {
-        item.symbol.file_path = item.file_path;
-        this.cacheSymbolLocation(item.symbol, item.file_path);
-      }
-
-      const sections = ['implements', 'implemented_by', 'defines', 'calls', 'called_by'];
-      sections.forEach((section) => {
-        const entries = item.relationships[section];
-        if (!Array.isArray(entries)) {
-          return;
-        }
-
-        entries.forEach((entry) => {
-          const symbol = Array.isArray(entry) ? entry[0] : entry;
-          if (!symbol) {
-            return;
-          }
-          this.ensureSymbolLocation(symbol);
-        });
-      });
-    });
   }
 
   /**
@@ -170,7 +43,6 @@ class ContextProvider {
 
     // Validate response
     this.validator.validateOrThrow(response, 'symbol');
-    this.enrichRelationships(response);
 
     // Format output
     switch (format) {
@@ -277,7 +149,6 @@ class ContextProvider {
    */
   async handleDescribe(symbolName, options = {}) {
     const response = this.executor.describe(symbolName);
-    this.enrichRelationships(response);
     return SymbolFormatter.format(response);
   }
 
