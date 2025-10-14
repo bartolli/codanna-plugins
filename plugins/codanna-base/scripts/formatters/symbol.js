@@ -39,7 +39,7 @@ class SymbolFormatter {
     lines.push('');
 
     // Location
-    lines.push(`**Location:** ${file_path}:${symbol.range.start_line}`);
+    lines.push(`**Location:** ${SymbolFormatter.formatLocation(file_path, symbol.range)}`);
     lines.push(`**Module:** ${symbol.module_path || 'N/A'}`);
     lines.push('');
 
@@ -71,7 +71,7 @@ class SymbolFormatter {
           lines.push('**Implements:**');
           relationships.implements.forEach((item) => {
             const impl = Array.isArray(item) ? item[0] : item;
-            lines.push(`  - ${impl.name} (${impl.kind})`);
+            SymbolFormatter.formatRelationshipLines(impl).forEach(line => lines.push(line));
           });
           lines.push('');
         }
@@ -80,7 +80,7 @@ class SymbolFormatter {
           lines.push('**Implemented by:**');
           relationships.implemented_by.forEach((item) => {
             const impl = Array.isArray(item) ? item[0] : item;
-            lines.push(`  - ${impl.name} (${impl.kind})`);
+            SymbolFormatter.formatRelationshipLines(impl).forEach(line => lines.push(line));
           });
           lines.push('');
         }
@@ -89,7 +89,7 @@ class SymbolFormatter {
           lines.push('**Calls:**');
           relationships.calls.forEach((item) => {
             const callee = Array.isArray(item) ? item[0] : item;
-            lines.push(`  - ${callee.name} (${callee.kind})`);
+            SymbolFormatter.formatRelationshipLines(callee).forEach(line => lines.push(line));
           });
           lines.push('');
         }
@@ -98,7 +98,7 @@ class SymbolFormatter {
           lines.push('**Called by:**');
           relationships.called_by.forEach((item) => {
             const [caller, calleeRef] = Array.isArray(item) ? item : [item, ''];
-            lines.push(`  - ${caller.name} (${caller.kind})${calleeRef ? ` → ${calleeRef}` : ''}`);
+            SymbolFormatter.formatRelationshipLines(caller, calleeRef).forEach(line => lines.push(line));
           });
           lines.push('');
         }
@@ -107,7 +107,7 @@ class SymbolFormatter {
           lines.push('**Defines:**');
           relationships.defines.forEach((item) => {
             const defined = Array.isArray(item) ? item[0] : item;
-            lines.push(`  - ${defined.name} (${defined.kind})`);
+            SymbolFormatter.formatRelationshipLines(defined).forEach(line => lines.push(line));
           });
           lines.push('');
         }
@@ -137,7 +137,7 @@ class SymbolFormatter {
     if (!item) return 'No symbol data';
 
     const { symbol, file_path } = item;
-    const location = `${file_path}:${symbol.range.start_line}`;
+    const location = SymbolFormatter.formatLocation(file_path, symbol.range);
     return `${symbol.kind} ${symbol.name} @ ${location}`;
   }
 
@@ -150,5 +150,80 @@ class SymbolFormatter {
     return JSON.stringify(response, null, 2);
   }
 }
+
+/**
+ * Helper to format a file path with an optional line range.
+ */
+SymbolFormatter.formatLocation = function formatLocation(filePath, range) {
+  if (!filePath) {
+    return '';
+  }
+
+  const basePath = SymbolFormatter.stripFileLineSuffix(filePath);
+  const rangeStr = SymbolFormatter.formatRange(range);
+  if (!rangeStr) {
+    return basePath;
+  }
+  return `${basePath}:${rangeStr}`;
+};
+
+/**
+ * Helper to format a relationship entry with location and module info.
+ */
+SymbolFormatter.formatRelationshipLines = function formatRelationshipLines(symbol, relationNote) {
+  if (!symbol) {
+    return ['  - (unknown symbol)'];
+  }
+
+  const note = relationNote ? ` → ${relationNote}` : '';
+  const lines = [`  - ${symbol.name} (${symbol.kind})${note}`];
+
+  const location = SymbolFormatter.formatLocation(symbol.file_path, symbol.range);
+  if (location) {
+    lines.push(`    **Location:** ${location}`);
+  } else if (symbol.range && typeof symbol.range.start_line === 'number') {
+    const rangeStr = SymbolFormatter.formatRange(symbol.range);
+    lines.push(`    **Range:** ${rangeStr}`);
+  } else if (symbol.file_id !== undefined && symbol.file_id !== null) {
+    lines.push(`    **File ID:** ${symbol.file_id}`);
+  }
+
+  if (symbol.module_path) {
+    lines.push(`    **Module:** ${symbol.module_path}`);
+  }
+
+  return lines;
+};
+
+/**
+ * Strip any trailing :line component from a file path string.
+ */
+SymbolFormatter.stripFileLineSuffix = function stripFileLineSuffix(filePath) {
+  const colonIndex = filePath.lastIndexOf(':');
+  if (colonIndex === -1) {
+    return filePath;
+  }
+
+  const suffix = filePath.slice(colonIndex + 1);
+  if (/^\d+$/.test(suffix)) {
+    return filePath.slice(0, colonIndex);
+  }
+
+  return filePath;
+};
+
+/**
+ * Format a Range object into start[-end] form.
+ */
+SymbolFormatter.formatRange = function formatRange(range) {
+  if (!range || typeof range.start_line !== 'number') {
+    return '';
+  }
+
+  const startLine = range.start_line;
+  const endLine = typeof range.end_line === 'number' ? range.end_line : startLine;
+
+  return endLine !== startLine ? `${startLine}-${endLine}` : `${startLine}`;
+};
 
 module.exports = SymbolFormatter;

@@ -74,6 +74,57 @@ class CodannaExecutor {
   }
 
   /**
+   * Execute an MCP tool command and return parsed JSON
+   * @param {string} tool - MCP tool name (e.g., 'find_symbol')
+   * @param {string} args - Tool arguments in CLI format
+   * @returns {Object} Parsed JSON response
+   */
+  executeMcp(tool, args = '') {
+    const codannaCmd = this.configResolver.getCodannaCommand(this.binaryPath);
+    const argSuffix = args ? ` ${args}` : '';
+    const fullCommand = `${codannaCmd} mcp ${tool}${argSuffix} --json`;
+
+    const workingDir = process.env.CLAUDE_WORKING_DIR || process.cwd();
+
+    try {
+      const output = execSync(fullCommand, {
+        encoding: 'utf8',
+        stdio: ['pipe', 'pipe', 'pipe'],
+        cwd: workingDir
+      });
+
+      return JSON.parse(output);
+    } catch (error) {
+      throw new Error(`Codanna MCP execution failed: ${error.message}\nCommand: ${fullCommand}`);
+    }
+  }
+
+  /**
+   * Find symbol entries via MCP with filters such as file_id
+   * @param {Object} filters - Supported filters: { name, file_id }
+   * @returns {Array} Array of symbol entries from MCP response
+   */
+  findSymbolWithFilters(filters = {}) {
+    const args = [];
+    if (filters.name) {
+      const escaped = filters.name.replace(/"/g, '\\"');
+      args.push(`name:"${escaped}"`);
+    }
+    if (filters.file_id !== undefined && filters.file_id !== null) {
+      args.push(`file_id:${filters.file_id}`);
+    }
+    if (filters.limit) {
+      args.push(`limit:${filters.limit}`);
+    }
+
+    const response = this.executeMcp('find_symbol', args.join(' '));
+    if (response.status !== 'success' || !Array.isArray(response.data)) {
+      return [];
+    }
+    return response.data;
+  }
+
+  /**
    * Search for symbols
    * @param {string} query - Search query
    * @param {number} limit - Maximum results
