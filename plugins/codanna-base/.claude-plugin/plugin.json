@@ -18,7 +18,7 @@
   ],
   "category": "codanna-core",
   "commands": [
-    "./commands/find.md",
+    "./commands/x-ray.md",
     "./commands/symbol.md"
   ],
   "scripts": [
