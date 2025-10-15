@@ -38,8 +38,8 @@ class SymbolFormatter {
     lines.push(`**Visibility:** ${symbol.visibility}`);
     lines.push('');
 
-    // Location
-    lines.push(`**Location:** ${SymbolFormatter.formatLocation(file_path, symbol.range)}`);
+    // Location (file_path already includes range from codanna)
+    lines.push(`**Location:** ${file_path || 'N/A'}`);
     lines.push(`**Module:** ${symbol.module_path || 'N/A'}`);
     lines.push('');
 
@@ -137,8 +137,7 @@ class SymbolFormatter {
     if (!item) return 'No symbol data';
 
     const { symbol, file_path } = item;
-    const location = SymbolFormatter.formatLocation(file_path, symbol.range);
-    return `${symbol.kind} ${symbol.name} @ ${location}`;
+    return `${symbol.kind} ${symbol.name} @ ${file_path || 'unknown'}`;
   }
 
   /**
@@ -178,9 +177,9 @@ SymbolFormatter.formatRelationshipLines = function formatRelationshipLines(symbo
   const note = relationNote ? ` → ${relationNote}` : '';
   const lines = [`  - ${symbol.name} (${symbol.kind})${note}`];
 
-  const location = SymbolFormatter.formatLocation(symbol.file_path, symbol.range);
-  if (location) {
-    lines.push(`    **Location:** ${location}`);
+  // file_path already includes range from codanna
+  if (symbol.file_path) {
+    lines.push(`    **Location:** ${symbol.file_path}`);
   } else if (symbol.range && typeof symbol.range.start_line === 'number') {
     const rangeStr = SymbolFormatter.formatRange(symbol.range);
     lines.push(`    **Range:** ${rangeStr}`);

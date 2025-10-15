@@ -37,7 +37,7 @@ Execute: `node .claude/scripts/codanna/context-provider.js find "$OptimizedQuery
 
 ### Your Workflow <Step_2 YourWorkflow>
 
-1. Analyze the results with their relevance scores (focus on results with score > 0.6)
+1. Analyze the results with their relevance scores (focus on results with score > 0.6 (if possible))
 
 2. **To see actual implementation** of interesting results:
    - Use the line range from the Location field to read just the relevant code
@@ -51,19 +51,34 @@ Execute: `node .claude/scripts/codanna/context-provider.js find "$OptimizedQuery
 
 3. **When relationships are shown** (called_by, calls, defines, implements):
    - If a relationship looks relevant to answering the query, investigate it
-   - Execute: `node .claude/scripts/codanna/context-provider.js symbol <relationship_symbol_name>`
-   - Example: If you see "Called by: `initialize_registry`", run: `node .claude/scripts/codanna/context-provider.js symbol initialize_registry`
+   - Execute: `node .claude/scripts/codanna/context-provider.js describe <relationship_symbol_name>`
+   - Example: If you see "Called by: `initialize_registry`", run: `node .claude/scripts/codanna/context-provider.js describe initialize_registry`
    - Note: Following 1-2 key relationships per result is typically sufficient
 
 4. Build a complete picture by following key relationships and reading relevant code sections
 
 5. **If needed**, repeat <Step_1: GatherContext> with a refined query based on what you learned.
 
-Based on the gathered context, engage with the user to narrow focus and help the user with further request.
-
 ---
 
 ## Tips for Efficient Exploration
+
+**The results include:**
+- Relevance scores (how well each result matches the query)
+- Symbol documentation and signatures
+- Relationships (who calls this, what it calls, what it defines)
+- System guidance for follow-up investigation
+
+**sed (native on unix only):**
+- You can also see actual implementation with `sed`: (works native on Unix based environments):
+   - Use the line range from the Location field to read just the relevant code
+   - Example: If you see "Location: `src/io/exit_code.rs:108-120`"
+   - Execute: `sed -n '108,120p' src/io/exit_code.rs` to read lines 108-120
+   - This shows the actual code implementation, not just the signature. It works like the Read tool.
+
+- Add `--lang=rust` (or python, typescript, etc.) to narrow results by language if you work on multi-language projects
+- Follow relationships that appear in multiple results (they're likely important)
+- Use the `describe` command to get full details about interesting relationships
 
 **Token awareness:**
 - Each search uses ~500 tokens
@@ -76,3 +91,5 @@ Based on the gathered context, engage with the user to narrow focus and help the
 - Identify patterns and integration points
 - Present findings and await user direction
 - Don't start implementing or making changes yet
+
+Based on the gathered context, engage with the user to narrow focus and help the user with further request.

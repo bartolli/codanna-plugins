@@ -71,8 +71,7 @@ class ContextProvider {
     if (response.items && response.items.length > 0) {
       response.items.forEach(item => {
         const { symbol, file_path } = item;
-        const location = SymbolFormatter.formatLocation(file_path, symbol.range);
-        lines.push(`- **${symbol.name}** (${symbol.kind}) @ ${location}`);
+        lines.push(`- **${symbol.name}** (${symbol.kind}) @ ${file_path || 'unknown'}`);
       });
     }
 
@@ -94,8 +93,7 @@ class ContextProvider {
     if (response.items && response.items.length > 0) {
       response.items.forEach(item => {
         const { symbol, file_path } = item;
-        const location = SymbolFormatter.formatLocation(file_path, symbol.range);
-        lines.push(`- **${symbol.name}** (${symbol.kind}) @ ${location}`);
+        lines.push(`- **${symbol.name}** (${symbol.kind}) @ ${file_path || 'unknown'}`);
       });
     }
 
@@ -132,8 +130,7 @@ class ContextProvider {
       response.items.forEach((item, index) => {
         const { symbol, file_path } = item;
         lines.push(`${index + 1}. **${symbol.name}** (${symbol.kind}) [${symbol.language_id}]`);
-        const location = SymbolFormatter.formatLocation(file_path, symbol.range);
-        lines.push(`   ${location}`);
+        lines.push(`   ${file_path || 'unknown'}`);
         if (symbol.signature) {
           lines.push(`   \`${symbol.signature}\``);
         }

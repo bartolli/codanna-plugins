@@ -19,7 +19,7 @@ Use the Bash tool to fetch symbol information, then answer the user's question.
 3. Answer the question: "$2"
 
 When answering:
-- Reference actual code locations (file:line)
+- Reference actual code locations (file:line_range)
 - Explain relationships (calls, called_by, implements, defines)
 - Use the signature and documentation from the symbol
 - Be specific about how the symbol is used in the codebase
