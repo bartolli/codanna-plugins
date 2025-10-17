@@ -8,10 +8,11 @@
       "name": "codanna",
       "source": "./plugins/codanna-base",
       "description": "Codanna code intelligence integration for Claude Code - semantic search, symbol analysis, and call graph exploration",
-      "version": "2.1.0",
+      "version": "0.1.2",
       "author": {
         "name": "Codanna Team"
-      }
+      },
+      "strict": false
     }
   ]
 }
