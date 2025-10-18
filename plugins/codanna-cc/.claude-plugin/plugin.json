@@ -1,5 +1,5 @@
 {
-  "name": "codanna",
+  "name": "codanna-cc",
   "description": "Codanna code intelligence integration for Claude Code - semantic search, symbol analysis, and call graph exploration",
   "author": {
     "name": "bartolli"
@@ -18,5 +18,6 @@
   "commands": [
     "./commands/x-ray.md",
     "./commands/symbol.md"
-  ]
+  ],
+  "mcpServers": "./.mcp.json"
 }

@@ -7,6 +7,16 @@
     {
       "name": "codanna",
       "source": "./plugins/codanna-base",
+      "description": "Plugin integration integration for Codanna CLI - semantic search, symbol analysis, and call graph exploration",
+      "version": "0.1.2",
+      "author": {
+        "name": "Codanna Team"
+      },
+      "strict": false
+    },
+        {
+      "name": "codanna",
+      "source": "./plugins/codanna-cc",
       "description": "Codanna code intelligence integration for Claude Code - semantic search, symbol analysis, and call graph exploration",
       "version": "0.1.2",
       "author": {

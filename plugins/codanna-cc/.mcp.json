@@ -1,14 +1,14 @@
 {
   "mcpServers": {
-    "codanna": {
+    "codanna-cc": {
       "command": "codanna",
-      "args": ["--config", "${CODANNA_PROJECT_DIR}/.codanna/settings.toml", "serve", "--watch", "--watch-interval", "5"]
+      "args": ["--config", "${CLAUDE_PROJECT_DIR}/.codanna/settings.toml", "serve", "--watch", "--watch-interval", "5"]
     },
-    "codanna-sse": {
+    "codanna-cc-sse": {
       "type": "sse",
       "url": "http://127.0.0.1:8080/mcp/sse"
     },
-    "codanna-https": {
+    "codanna-cc-https": {
       "type": "sse",
       "url": "https://127.0.0.1:8443/mcp/sse"
     }
