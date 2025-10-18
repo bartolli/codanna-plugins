@@ -19,7 +19,7 @@ User's question: **$2**
 Use the Bash tool to fetch symbol information, then answer the user's question.
 
 **Workflow:**
-1. Execute: `node ${CLAUDE_PLUGIN_ROOT}/scripts/context-provider.js symbol $1`
+1. Execute: `node ${CLAUDE_PLUGIN_ROOT}/codanna-cc/scripts/context-provider.js symbol $1`
 2. Analyze the symbol details returned
 3. Answer the question: "$2"
 
