@@ -15,7 +15,7 @@
       "strict": false
     },
         {
-      "name": "codanna",
+      "name": "codanna-cc",
       "source": "./plugins/codanna-cc",
       "description": "Codanna code intelligence integration for Claude Code - semantic search, symbol analysis, and call graph exploration",
       "version": "0.1.2",
