@@ -31,7 +31,7 @@ Execute this command with your optimized query:
 
 Use the Bash tool to perform semantic code search:
 
-Execute: `node ${CLAUDE_PLUGIN_ROOT}/scripts/codanna/context-provider.js find "$OptimizedQuery" --limit=5`
+Execute: `node ${CLAUDE_PLUGIN_ROOT}/scripts/context-provider.js find "$OptimizedQuery" --limit=5`
 
 **What Codanna returns:**
 - Relevance scores (how well each result matches)
@@ -55,8 +55,8 @@ Execute: `node ${CLAUDE_PLUGIN_ROOT}/scripts/codanna/context-provider.js find "$
 
 3. **When relationships are shown** (called_by, calls, defines, implements):
    - If a relationship looks relevant to answering the query, investigate it
-   - Execute: `node ${CLAUDE_PLUGIN_ROOT}/scripts/codanna/context-provider.js describe <relationship_symbol_name>`
-   - Example: If you see "Called by: `initialize_registry`", run: `node ${CLAUDE_PLUGIN_ROOT}/scripts/codanna/context-provider.js describe initialize_registry`
+   - Execute: `node ${CLAUDE_PLUGIN_ROOT}/scripts/context-provider.js describe <relationship_symbol_name>`
+   - Example: If you see "Called by: `initialize_registry`", run: `node ${CLAUDE_PLUGIN_ROOT}/scripts/context-provider.js describe initialize_registry`
    - Note: Following 1-2 key relationships per result is typically sufficient
 
 4. Build a complete picture by following key relationships and reading relevant code sections

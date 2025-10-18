@@ -4,6 +4,10 @@ description: Looks up a symbol by name. Returns its location, signature, line ra
 argument-hint: <symbol-name> "<question>"
 ---
 
+## Environment
+
+CLAUDE_PLUGIN_ROOT = !`node -e "console.log(process.env.CLAUDE_PLUGIN_ROOT)"`
+
 ## Context
 
 Symbol to analyze: **$1**
