@@ -53,11 +53,15 @@ Execute: `node ${CLAUDE_PLUGIN_ROOT}/codanna-cc/scripts/context-provider.js find
    - Formula: `limit = end_line - start_line + 1`
    - Example: `Read(file_path="/full/path/to/src/io/exit_code.rs", offset=108, limit=13)`
 
+⚠️ **CRITICAL**: Do NOT read entire files! Use offset/limit based on Location fields!
+
 3. **When relationships are shown** (called_by, calls, defines, implements):
    - If a relationship looks relevant to answering the query, investigate it
    - Execute: `node ${CLAUDE_PLUGIN_ROOT}/codanna-cc/scripts/context-provider.js describe <relationship_symbol_name>`
    - Example: If you see "Called by: `initialize_registry`", run: `node ${CLAUDE_PLUGIN_ROOT}/codanna-cc/scripts/context-provider.js describe initialize_registry`
    - Note: Following 1-2 key relationships per result is typically sufficient
+
+⚠️ **CRITICAL**: Do NOT read entire files! Use offset/limit based on Location fields!
 
 4. Build a complete picture by following key relationships and reading relevant code sections
 
