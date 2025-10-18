@@ -13,7 +13,7 @@ const os = require('os');
  */
 class ConfigResolver {
   constructor(workingDir = null) {
-    this.workingDir = workingDir || process.env.CLAUDE_PROJECT_DIR || process.env.CODANNA_PROJECT_DIR || process.cwd();
+    this.workingDir = workingDir || process.env.CLAUDE_WORKING_DIR || process.cwd();
     this.globalCodannaDir = path.join(os.homedir(), '.codanna');
   }
 
