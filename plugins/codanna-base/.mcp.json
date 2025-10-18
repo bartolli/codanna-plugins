@@ -2,7 +2,7 @@
   "mcpServers": {
     "codanna": {
       "command": "codanna",
-      "args": ["--config", "${CODANNA_PROJECT_DIR}/.codanna/settings.toml", "serve", "--watch", "--watch-interval", "5"]
+      "args": ["--config", ".codanna/settings.toml", "serve", "--watch", "--watch-interval", "5"]
     },
     "codanna-sse": {
       "type": "sse",
