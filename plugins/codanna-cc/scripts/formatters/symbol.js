@@ -29,7 +29,7 @@ class SymbolFormatter {
 
     // Header
     lines.push('');
-    lines.push(`# ${symbol.name}`);
+    lines.push(`# ${symbol.name} [symbol_id:${symbol.id}]`);
     lines.push('');
 
     // Symbol metadata
@@ -175,7 +175,8 @@ SymbolFormatter.formatRelationshipLines = function formatRelationshipLines(symbo
   }
 
   const note = relationNote ? ` → ${relationNote}` : '';
-  const lines = [`  - ${symbol.name} (${symbol.kind})${note}`];
+  const symbolId = symbol.id ? ` [symbol_id:${symbol.id}]` : '';
+  const lines = [`  - ${symbol.name} (${symbol.kind})${note}${symbolId}`];
 
   // file_path already includes range from codanna
   if (symbol.file_path) {

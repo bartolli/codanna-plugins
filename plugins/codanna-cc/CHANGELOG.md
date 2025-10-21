@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2025-10-21
+
+### Added
+- Symbol ID display in all command outputs (`[symbol_id:123]`)
+- Symbol ID support in commands: `callers`, `calls`, `describe`
+- Symbol ID workflow documentation in README.md
+
+### Changed
+- Relationship formatting now includes symbol IDs for all related symbols
+- Semantic search results display symbol IDs for main results and relationships
+- Updated command documentation to show `symbol_id:ID` syntax
+
+### Removed
+- Deleted obsolete plan.md file
+
 ## [0.1.2] - 2025-10-17
 
 ### Changed

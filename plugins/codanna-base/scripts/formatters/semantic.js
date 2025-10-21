@@ -33,16 +33,10 @@ class SemanticFormatter {
       const { symbol, score, context } = result;
       const { file_path, relationships } = context;
 
-      lines.push(`## ${index + 1}. ${symbol.name} (${symbol.kind})`);
+      lines.push(`## ${index + 1}. ${symbol.name} (${symbol.kind}) [symbol_id:${symbol.id}]`);
       lines.push('');
       lines.push(`**Relevance:** ${(score * 100).toFixed(1)}%`);
-
-      // Extract just the file path without the line number suffix
-      const cleanFilePath = file_path.split(':').slice(0, -1).join(':');
-      const lineRange = symbol.range.start_line === symbol.range.end_line
-        ? symbol.range.start_line
-        : `${symbol.range.start_line}-${symbol.range.end_line}`;
-      lines.push(`**Location:** ${cleanFilePath}:${lineRange} (${symbol.scope_context})`);
+      lines.push(`**Location:** ${file_path} (${symbol.scope_context})`);
 
       lines.push(`**Module:** ${symbol.module_path}`);
       lines.push(`**Visibility:** ${symbol.visibility}`);
@@ -77,7 +71,8 @@ class SemanticFormatter {
             relationships.called_by.slice(0, 3).forEach((item) => {
               const [caller] = Array.isArray(item) ? item : [item];
               const callerLocation = `${caller.module_path}:${caller.range.start_line}`;
-              lines.push(`  - \`${caller.name}\` (${caller.kind}) at ${callerLocation}`);
+              const callerId = caller.id ? ` [symbol_id:${caller.id}]` : '';
+              lines.push(`  - \`${caller.name}\` (${caller.kind}) at ${callerLocation}${callerId}`);
             });
             if (callerCount > 3) {
               lines.push(`  - _... and ${callerCount - 3} more_`);
@@ -90,7 +85,8 @@ class SemanticFormatter {
             // Show first 3 calls
             relationships.calls.slice(0, 3).forEach((item) => {
               const callee = Array.isArray(item) ? item[0] : item;
-              lines.push(`  - \`${callee.name}\` (${callee.kind})`);
+              const calleeId = callee.id ? ` [symbol_id:${callee.id}]` : '';
+              lines.push(`  - \`${callee.name}\` (${callee.kind})${calleeId}`);
             });
             if (callCount > 3) {
               lines.push(`  - _... and ${callCount - 3} more_`);
@@ -102,7 +98,8 @@ class SemanticFormatter {
             lines.push(`- **Defines ${defineCount} symbol(s):**`);
             relationships.defines.slice(0, 3).forEach((item) => {
               const defined = Array.isArray(item) ? item[0] : item;
-              lines.push(`  - \`${defined.name}\` (${defined.kind})`);
+              const definedId = defined.id ? ` [symbol_id:${defined.id}]` : '';
+              lines.push(`  - \`${defined.name}\` (${defined.kind})${definedId}`);
             });
             if (defineCount > 3) {
               lines.push(`  - _... and ${defineCount - 3} more_`);

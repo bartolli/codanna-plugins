@@ -53,10 +53,11 @@ Main CLI interface for slash commands.
 **Commands:**
 ```bash
 node context-provider.js symbol <name> [--format=markdown|json|compact] [--lang=rust|python|...]
-node context-provider.js callers <function-name> [--lang=...]
-node context-provider.js calls <function-name> [--lang=...]
+node context-provider.js callers <function-name|symbol_id:ID> [--lang=...]
+node context-provider.js calls <function-name|symbol_id:ID> [--lang=...]
 node context-provider.js search <query> [--limit=5] [--lang=...]
-node context-provider.js describe <symbol-name> [--lang=...]
+node context-provider.js describe <symbol-name|symbol_id:ID> [--lang=...]
+node context-provider.js find <query> [--limit=5] [--lang=...] [--format=markdown|json|compact]
 ```
 
 **Output formats:**
@@ -145,6 +146,32 @@ JSON Schema definition for Codanna symbol responses.
   }]
 }
 ```
+
+## Symbol ID Workflow
+
+Commands display `[symbol_id:123]` for all symbols, enabling unambiguous follow-up queries.
+
+**Example workflow:**
+```bash
+# Step 1: Find symbols with semantic search
+node context-provider.js find "error handling" --limit=3
+
+# Output shows:
+# 1. handle_error (Function) [symbol_id:1234]
+#    - Calls: validate_input (Function) [symbol_id:5678]
+#    - Called by: process_file (Function) [symbol_id:9012]
+
+# Step 2: Investigate specific symbol using its ID (unambiguous)
+node context-provider.js calls symbol_id:1234
+
+# Step 3: Follow relationships
+node context-provider.js describe symbol_id:5678
+```
+
+**Why symbol_id:**
+- **Unambiguous**: Works even when multiple symbols have the same name
+- **Workflow-optimized**: Copy ID from search results, paste into next command
+- **Token-efficient**: No need to re-search or disambiguate
 
 ## Usage from Slash Commands
 

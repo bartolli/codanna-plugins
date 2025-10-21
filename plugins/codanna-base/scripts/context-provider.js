@@ -71,7 +71,8 @@ class ContextProvider {
     if (response.items && response.items.length > 0) {
       response.items.forEach(item => {
         const { symbol, file_path } = item;
-        lines.push(`- **${symbol.name}** (${symbol.kind}) @ ${file_path || 'unknown'}`);
+        const symbolId = symbol.id ? ` [symbol_id:${symbol.id}]` : '';
+        lines.push(`- **${symbol.name}** (${symbol.kind}) @ ${file_path || 'unknown'}${symbolId}`);
       });
     }
 
@@ -93,7 +94,8 @@ class ContextProvider {
     if (response.items && response.items.length > 0) {
       response.items.forEach(item => {
         const { symbol, file_path } = item;
-        lines.push(`- **${symbol.name}** (${symbol.kind}) @ ${file_path || 'unknown'}`);
+        const symbolId = symbol.id ? ` [symbol_id:${symbol.id}]` : '';
+        lines.push(`- **${symbol.name}** (${symbol.kind}) @ ${file_path || 'unknown'}${symbolId}`);
       });
     }
 
