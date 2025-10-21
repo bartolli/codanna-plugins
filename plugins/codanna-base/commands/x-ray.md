@@ -51,8 +51,8 @@ Execute: `node .claude/scripts/codanna/context-provider.js find "$OptimizedQuery
 
 3. **When relationships are shown** (called_by, calls, defines, implements):
    - If a relationship looks relevant to answering the query, investigate it
-   - Execute: `node .claude/scripts/codanna/context-provider.js describe <relationship_symbol_name>`
-   - Example: If you see "Called by: `initialize_registry`", run: `node .claude/scripts/codanna/context-provider.js describe initialize_registry`
+   - Execute: `node .claude/scripts/codanna/context-provider.js describe <relationship_symbol_name|symbol_id:ID>`
+   - Example: If you see "Called by: `initialize_registry [symbol_id:123]`", run: `node .claude/scripts/codanna/context-provider.js describe initialize_registry` or `describe symbol_id:123`
    - Note: Following 1-2 key relationships per result is typically sufficient
 
 4. Build a complete picture by following key relationships and reading relevant code sections

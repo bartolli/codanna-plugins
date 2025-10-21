@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Relationship formatting now includes symbol IDs for all related symbols
 - Semantic search results display symbol IDs for main results and relationships
 - Updated command documentation to show `symbol_id:ID` syntax
+- Updated `/symbol` command documentation with relationship following instructions
+- Updated `/x-ray` command documentation with symbol ID examples
 
 ### Removed
 - Deleted obsolete plan.md file

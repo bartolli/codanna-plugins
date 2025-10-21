@@ -57,8 +57,8 @@ Execute: `node ${CLAUDE_PLUGIN_ROOT}/codanna-cc/scripts/context-provider.js find
 
 3. **When relationships are shown** (called_by, calls, defines, implements):
    - If a relationship looks relevant to answering the query, investigate it
-   - Execute: `node ${CLAUDE_PLUGIN_ROOT}/codanna-cc/scripts/context-provider.js describe <relationship_symbol_name>`
-   - Example: If you see "Called by: `initialize_registry`", run: `node ${CLAUDE_PLUGIN_ROOT}/codanna-cc/scripts/context-provider.js describe initialize_registry`
+   - Execute: `node ${CLAUDE_PLUGIN_ROOT}/codanna-cc/scripts/context-provider.js describe <relationship_symbol_name|symbol_id:ID>`
+   - Example: If you see "Called by: `initialize_registry [symbol_id:123]`", run: `node ${CLAUDE_PLUGIN_ROOT}/codanna-cc/scripts/context-provider.js describe initialize_registry` or `describe symbol_id:123`
    - Note: Following 1-2 key relationships per result is typically sufficient
 
 ⚠️ **CRITICAL**: Do NOT read entire files! Use offset/limit based on Location fields!
